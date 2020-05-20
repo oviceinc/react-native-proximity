@@ -4,7 +4,10 @@ import {
   Platform,
 } from 'react-native';
 
-const { RNProximity } = NativeModules;
+const {
+  RNProximity
+} = NativeModules;
+
 
 let addListener = null;
 let removeListener = null;
@@ -23,6 +26,7 @@ if (Platform.OS === 'ios') {
     );
   }
 } else if (Platform.OS == 'android') {
+  const nativeModule = NativeModules.RNProximity;
   addListener = (callback) => {
     nativeModule.addListener();
     DeviceEventEmitter.addListener(nativeModule.EVENT_ON_SENSOR_CHANGE, e => callback(e));
