@@ -61,6 +61,9 @@ public class RNProximityModule extends ReactContextBaseJavaModule implements Sen
     mSensorManager.unregisterListener(this);
   }
 
+  @ReactMethod
+  public void proximityEnabled(boolean enabled) {}
+
   @Override
   public String getName() {
     return "RNProximity";
