@@ -7,6 +7,7 @@ import android.hardware.SensorEvent;
 import android.hardware.SensorEventListener;
 import android.hardware.SensorManager;
 import android.util.Log;
+import android.media.AudioManager;
 
 import androidx.annotation.Nullable;
 
@@ -79,6 +80,13 @@ public class RNProximityModule extends ReactContextBaseJavaModule implements Sen
     double distance = sensorEvent.values[0];
     double maximumRange = mProximity.getMaximumRange();
     boolean isNearDevice = distance < maximumRange;
+
+    AudioManager audioManager = (AudioManager)this.reactContext.getSystemService(this.reactContext.AUDIO_SERVICE);
+    if (isNearDevice) {
+      audioManager.setSpeakerphoneOn(false);
+    } else {
+      audioManager.setSpeakerphoneOn(true);
+    }
 
     params.putBoolean(KEY_PROXIMITY, isNearDevice);
     params.putDouble(KEY_DISTANCE, distance);
