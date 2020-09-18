@@ -27,7 +27,7 @@ public class RNProximityModule extends ReactContextBaseJavaModule implements Sen
   private static final String KEY_PROXIMITY = "proximity";
   private static final String KEY_DISTANCE = "distance";
   private static final String KEY_EVENT_ON_SENSOR_CHANGE = "EVENT_ON_SENSOR_CHANGE";
-  private static final String EVENT_ON_SENSOR_CHANGE = "onSensorChanged";
+  private static final String EVENT_ON_SENSOR_CHANGE = "ProximityStateDidChange";
   private final ReactApplicationContext reactContext;
 
   private SensorManager mSensorManager;

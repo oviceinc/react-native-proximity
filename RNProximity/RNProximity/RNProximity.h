@@ -1,16 +1,13 @@
 //
 //  RNProximity.h
 //
-//  Created by William Bout
+//  Created by Liviu Padurariu
 //
 
-#import <Foundation/Foundation.h>
 #import <React/RCTBridgeModule.h>
-#import <React/RCTBridge.h>
-#import <React/RCTEventDispatcher.h>
+#import <React/RCTEventEmitter.h>
 
-@interface RNProximity : NSObject <RCTBridgeModule>
 
-@property (retain) EventEmitter * emitter;
+@interface RNProximity : RCTEventEmitter <RCTBridgeModule>
 
 @end
