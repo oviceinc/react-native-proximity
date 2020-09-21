@@ -33,36 +33,30 @@ public class RNProximityModule extends ReactContextBaseJavaModule implements Sen
 
   private SensorManager mSensorManager;
   private Sensor mProximity;
+  private AudioManager mAudioManager;
 
   public RNProximityModule(ReactApplicationContext reactContext) {
     super(reactContext);
     this.reactContext = reactContext;
-    mSensorManager = (SensorManager) reactContext.getSystemService(Context.SENSOR_SERVICE);
+    mAudioManager = (AudioManager) reactContext.getSystemService(reactContext.AUDIO_SERVICE);
+    mSensorManager = (SensorManager)reactContext.getSystemService(Context.SENSOR_SERVICE);
     mProximity = mSensorManager.getDefaultSensor(Sensor.TYPE_PROXIMITY);
   }
 
   public void sendEvent(String eventName, @Nullable WritableMap params) {
-    if (this.reactContext.hasActiveCatalystInstance()) {
-      this.reactContext
-              .getJSModule(DeviceEventManagerModule.RCTDeviceEventEmitter.class)
-              .emit(eventName, params);
-    } else {
-      Log.i(TAG, "Waiting for CatalystInstance");
+    this.reactContext
+            .getJSModule(DeviceEventManagerModule.RCTDeviceEventEmitter.class)
+            .emit(eventName, params);
+  }
+
+  @ReactMethod
+  public void proximityEnabled(boolean enabled) {
+    if (enabled){
+      mSensorManager.registerListener(this, mProximity, SensorManager.SENSOR_DELAY_NORMAL);
+    }else {
+      mSensorManager.unregisterListener(this);
     }
   }
-
-  @ReactMethod
-  public void addListener() {
-    mSensorManager.registerListener(this, mProximity, SensorManager.SENSOR_DELAY_NORMAL);
-  }
-
-  @ReactMethod
-  public void removeListener() {
-    mSensorManager.unregisterListener(this);
-  }
-
-  @ReactMethod
-  public void proximityEnabled(boolean enabled) {}
 
   @Override
   public String getName() {
@@ -84,11 +78,12 @@ public class RNProximityModule extends ReactContextBaseJavaModule implements Sen
     double maximumRange = mProximity.getMaximumRange();
     boolean isNearDevice = distance < maximumRange;
 
-    AudioManager audioManager = (AudioManager)this.reactContext.getSystemService(this.reactContext.AUDIO_SERVICE);
     if (isNearDevice) {
-      audioManager.setSpeakerphoneOn(false);
+      mAudioManager.setMode(AudioManager.MODE_IN_COMMUNICATION);
+      mAudioManager.setSpeakerphoneOn(false);
     } else {
-      audioManager.setSpeakerphoneOn(true);
+      mAudioManager.setMode(AudioManager.MODE_NORMAL);
+      mAudioManager.setSpeakerphoneOn(true);
     }
 
     params.putBoolean(KEY_PROXIMITY, isNearDevice);

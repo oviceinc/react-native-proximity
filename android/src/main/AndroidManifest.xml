@@ -1,6 +1,3 @@
-
-<manifest xmlns:android="http://schemas.android.com/apk/res/android"
-          package="com.RNProximity">
-
+<manifest xmlns:android="http://schemas.android.com/apk/res/android" package="com.RNProximity">
+    <uses-permission android:name="android.permission.MODIFY_AUDIO_SETTINGS" />
 </manifest>
-  
