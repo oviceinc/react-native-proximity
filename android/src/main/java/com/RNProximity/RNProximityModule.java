@@ -35,6 +35,7 @@ public class RNProximityModule extends ReactContextBaseJavaModule implements Sen
   private SensorManager mSensorManager;
   private Sensor mProximity;
   private AudioManager mAudioManager;
+  private PowerManager mPowerManager;
   private PowerManager.WakeLock mWakeLock;
 
   public RNProximityModule(ReactApplicationContext reactContext) {
@@ -43,20 +44,24 @@ public class RNProximityModule extends ReactContextBaseJavaModule implements Sen
     mAudioManager = (AudioManager) reactContext.getSystemService(reactContext.AUDIO_SERVICE);
     mSensorManager = (SensorManager)reactContext.getSystemService(Context.SENSOR_SERVICE);
     mProximity = mSensorManager.getDefaultSensor(Sensor.TYPE_PROXIMITY);
+    mPowerManager = (PowerManager)this.reactContext.getSystemService(ReactApplicationContext.POWER_SERVICE);
   }
 
   public void turnOnScreen(){
     // turn on screen
-    PowerManager pm = (PowerManager)this.reactContext.getSystemService(ReactApplicationContext.POWER_SERVICE);
-    mWakeLock = pm.newWakeLock(PowerManager.PROXIMITY_SCREEN_OFF_WAKE_LOCK | PowerManager.ACQUIRE_CAUSES_WAKEUP, "contagt:tag");
-    mWakeLock.acquire();
+    if (mWakeLock != null && mWakeLock.isHeld()){
+      mWakeLock.release();
+    }
   }
 
   public void turnOffScreen(){
     // turn off screen
-    PowerManager pm = (PowerManager)this.reactContext.getSystemService(ReactApplicationContext.POWER_SERVICE);
-    mWakeLock = pm.newWakeLock(PowerManager.PROXIMITY_SCREEN_OFF_WAKE_LOCK, "contagt:tag");
-    mWakeLock.acquire();
+    if (mWakeLock == null){
+      mWakeLock = mPowerManager.newWakeLock(PowerManager.PROXIMITY_SCREEN_OFF_WAKE_LOCK, "contagt:tag");
+    }
+    if (!mWakeLock.isHeld()){
+      mWakeLock.acquire();
+    }
   }
 
   public void sendEvent(String eventName, @Nullable WritableMap params) {
@@ -69,7 +74,7 @@ public class RNProximityModule extends ReactContextBaseJavaModule implements Sen
   public void proximityEnabled(boolean enabled) {
     if (enabled){
       mSensorManager.registerListener(this, mProximity, SensorManager.SENSOR_DELAY_NORMAL);
-    }else {
+    } else {
       mSensorManager.unregisterListener(this);
     }
   }
