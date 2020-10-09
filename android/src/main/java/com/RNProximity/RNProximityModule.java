@@ -6,6 +6,7 @@ import android.hardware.Sensor;
 import android.hardware.SensorEvent;
 import android.hardware.SensorEventListener;
 import android.hardware.SensorManager;
+import android.os.PowerManager;
 import android.util.Log;
 import android.media.AudioManager;
 
@@ -34,6 +35,7 @@ public class RNProximityModule extends ReactContextBaseJavaModule implements Sen
   private SensorManager mSensorManager;
   private Sensor mProximity;
   private AudioManager mAudioManager;
+  private PowerManager.WakeLock mWakeLock;
 
   public RNProximityModule(ReactApplicationContext reactContext) {
     super(reactContext);
@@ -41,6 +43,20 @@ public class RNProximityModule extends ReactContextBaseJavaModule implements Sen
     mAudioManager = (AudioManager) reactContext.getSystemService(reactContext.AUDIO_SERVICE);
     mSensorManager = (SensorManager)reactContext.getSystemService(Context.SENSOR_SERVICE);
     mProximity = mSensorManager.getDefaultSensor(Sensor.TYPE_PROXIMITY);
+  }
+
+  public void turnOnScreen(){
+    // turn on screen
+    PowerManager pm = (PowerManager)this.reactContext.getSystemService(ReactApplicationContext.POWER_SERVICE);
+    mWakeLock = pm.newWakeLock(PowerManager.PROXIMITY_SCREEN_OFF_WAKE_LOCK | PowerManager.ACQUIRE_CAUSES_WAKEUP, "contagt:tag");
+    mWakeLock.acquire();
+  }
+
+  public void turnOffScreen(){
+    // turn off screen
+    PowerManager pm = (PowerManager)this.reactContext.getSystemService(ReactApplicationContext.POWER_SERVICE);
+    mWakeLock = pm.newWakeLock(PowerManager.PROXIMITY_SCREEN_OFF_WAKE_LOCK, "contagt:tag");
+    mWakeLock.acquire();
   }
 
   public void sendEvent(String eventName, @Nullable WritableMap params) {
@@ -81,9 +97,11 @@ public class RNProximityModule extends ReactContextBaseJavaModule implements Sen
     if (isNearDevice) {
       mAudioManager.setMode(AudioManager.MODE_IN_COMMUNICATION);
       mAudioManager.setSpeakerphoneOn(false);
+      turnOffScreen();
     } else {
       mAudioManager.setMode(AudioManager.MODE_NORMAL);
       mAudioManager.setSpeakerphoneOn(true);
+      turnOnScreen();
     }
 
     params.putBoolean(KEY_PROXIMITY, isNearDevice);
