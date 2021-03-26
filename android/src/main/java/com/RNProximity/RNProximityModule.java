@@ -42,6 +42,7 @@ public class RNProximityModule extends ReactContextBaseJavaModule implements Sen
     super(reactContext);
     this.reactContext = reactContext;
     mAudioManager = (AudioManager) reactContext.getSystemService(reactContext.AUDIO_SERVICE);
+    mAudioManager.setMode(AudioManager.STREAM_MUSIC);
     mSensorManager = (SensorManager)reactContext.getSystemService(Context.SENSOR_SERVICE);
     mProximity = mSensorManager.getDefaultSensor(Sensor.TYPE_PROXIMITY);
     mPowerManager = (PowerManager)this.reactContext.getSystemService(ReactApplicationContext.POWER_SERVICE);
@@ -100,11 +101,11 @@ public class RNProximityModule extends ReactContextBaseJavaModule implements Sen
     boolean isNearDevice = distance < maximumRange;
 
     if (isNearDevice) {
-      mAudioManager.setMode(AudioManager.MODE_IN_COMMUNICATION);
+      //mAudioManager.setMode(AudioManager.MODE_IN_COMMUNICATION);
       mAudioManager.setSpeakerphoneOn(false);
       turnOffScreen();
     } else {
-      mAudioManager.setMode(AudioManager.MODE_NORMAL);
+      //mAudioManager.setMode(AudioManager.STREAM_MUSIC);
       mAudioManager.setSpeakerphoneOn(true);
       turnOnScreen();
     }
