@@ -51,28 +51,28 @@ RCT_EXPORT_MODULE();
 - (void)sensorStateChange:(NSNotificationCenter *)notification {
     BOOL proximityState = [[UIDevice currentDevice] proximityState];
     if (hasListeners) { // Only send events if anyone is listening
-        [self audioOutputHandler:proximityState];
+        //[self audioOutputHandler:proximityState];
         [self sendEventWithName:ProximityStateDidChange body:@{@"proximity": @(proximityState)}];
     }
 }
 
-- (void)audioOutputHandler:(BOOL)isCloseToEar {
-    NSError *error = nil;
-    if (isCloseToEar) {
-        [[AVAudioSession sharedInstance] setCategory:AVAudioSessionCategoryPlayAndRecord error:&error];
-        [[AVAudioSession sharedInstance] setActive:YES error:&error];
-        if (error){
-            NSLog(@"%@", error);
-        }
-    } else {
-        NSError *error = nil;
-        [[AVAudioSession sharedInstance] setCategory:AVAudioSessionCategoryPlayback error:&error];
-        [[AVAudioSession sharedInstance] setActive:YES error:&error];
-        if (error){
-            NSLog(@"%@", error);
-        }
-    }
-}
+//- (void)audioOutputHandler:(BOOL)isCloseToEar {
+//    NSError *error = nil;
+//    if (isCloseToEar) {
+//        [[AVAudioSession sharedInstance] setCategory:AVAudioSessionCategoryPlayAndRecord error:&error];
+//        [[AVAudioSession sharedInstance] setActive:YES error:&error];
+//        if (error){
+//            NSLog(@"%@", error);
+//        }
+//    } else {
+//        NSError *error = nil;
+//        [[AVAudioSession sharedInstance] setCategory:AVAudioSessionCategoryPlayback error:&error];
+//        [[AVAudioSession sharedInstance] setActive:YES error:&error];
+//        if (error){
+//            NSLog(@"%@", error);
+//        }
+//    }
+//}
 
 RCT_EXPORT_METHOD(proximityEnabled:(BOOL)enabled) {
     dispatch_async(dispatch_get_main_queue(), ^{

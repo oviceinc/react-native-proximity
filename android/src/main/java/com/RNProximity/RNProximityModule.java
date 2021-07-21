@@ -8,7 +8,6 @@ import android.hardware.SensorEventListener;
 import android.hardware.SensorManager;
 import android.os.PowerManager;
 import android.util.Log;
-import android.media.AudioManager;
 
 import androidx.annotation.Nullable;
 
@@ -34,15 +33,12 @@ public class RNProximityModule extends ReactContextBaseJavaModule implements Sen
 
   private SensorManager mSensorManager;
   private Sensor mProximity;
-  private AudioManager mAudioManager;
   private PowerManager mPowerManager;
   private PowerManager.WakeLock mWakeLock;
 
   public RNProximityModule(ReactApplicationContext reactContext) {
     super(reactContext);
     this.reactContext = reactContext;
-    mAudioManager = (AudioManager) reactContext.getSystemService(reactContext.AUDIO_SERVICE);
-    mAudioManager.setMode(AudioManager.STREAM_MUSIC);
     mSensorManager = (SensorManager)reactContext.getSystemService(Context.SENSOR_SERVICE);
     mProximity = mSensorManager.getDefaultSensor(Sensor.TYPE_PROXIMITY);
     mPowerManager = (PowerManager)this.reactContext.getSystemService(ReactApplicationContext.POWER_SERVICE);
@@ -101,12 +97,8 @@ public class RNProximityModule extends ReactContextBaseJavaModule implements Sen
     boolean isNearDevice = distance < maximumRange;
 
     if (isNearDevice) {
-      //mAudioManager.setMode(AudioManager.MODE_IN_COMMUNICATION);
-      mAudioManager.setSpeakerphoneOn(false);
       turnOffScreen();
     } else {
-      //mAudioManager.setMode(AudioManager.STREAM_MUSIC);
-      mAudioManager.setSpeakerphoneOn(true);
       turnOnScreen();
     }
 
