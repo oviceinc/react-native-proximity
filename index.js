@@ -3,13 +3,13 @@ import { NativeEventEmitter, NativeModules } from 'react-native';
 const { RNProximity } = NativeModules;
 const RNProximityEmitter = new NativeEventEmitter(RNProximity);
 
-const addListener = (callback) => {
+const addListener = () => {
   RNProximity.proximityEnabled(true);
-  RNProximityEmitter.addListener('ProximityStateDidChange', callback);
+  return RNProximityEmitter.addListener('ProximityStateDidChange');
 };
-const removeListener = (callback) => {
+const removeListener = (eventSubscription) => {
   RNProximity.proximityEnabled(false);
-  RNProximityEmitter.removeListener('ProximityStateDidChange', callback);
+  eventSubscription.remove();
 };
 
 const removeAllListeners = () => {
