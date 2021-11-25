@@ -56,24 +56,6 @@ RCT_EXPORT_MODULE();
     }
 }
 
-//- (void)audioOutputHandler:(BOOL)isCloseToEar {
-//    NSError *error = nil;
-//    if (isCloseToEar) {
-//        [[AVAudioSession sharedInstance] setCategory:AVAudioSessionCategoryPlayAndRecord error:&error];
-//        [[AVAudioSession sharedInstance] setActive:YES error:&error];
-//        if (error){
-//            NSLog(@"%@", error);
-//        }
-//    } else {
-//        NSError *error = nil;
-//        [[AVAudioSession sharedInstance] setCategory:AVAudioSessionCategoryPlayback error:&error];
-//        [[AVAudioSession sharedInstance] setActive:YES error:&error];
-//        if (error){
-//            NSLog(@"%@", error);
-//        }
-//    }
-//}
-
 RCT_EXPORT_METHOD(proximityEnabled:(BOOL)enabled) {
     dispatch_async(dispatch_get_main_queue(), ^{
         [[UIDevice currentDevice] setProximityMonitoringEnabled:enabled];
